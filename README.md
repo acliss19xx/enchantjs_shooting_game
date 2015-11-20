@@ -1,3 +1,4 @@
-基になるファイル構成
+enchantjsで簡単なシューディングゲーム
 --
-このファイルを基に各チャプターのソースを記述していきます。
+サンプル
+http://acliss19xx.github.io/enchantjs_shooting_game/
