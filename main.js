@@ -23,6 +23,8 @@ window.onload = function(){
         sprite1.x = parseInt(game.width / 2);
         sprite1.y = 250;
         sprite1.frame = 5;
+        sprite1.AnimeTimer = 0;
+        sprite1.AnimeFlag = false;
         game.rootScene.addChild(sprite1);
 
         ball = new Sprite(16, 16);
@@ -56,8 +58,8 @@ window.onload = function(){
             //ボールと敵が当たったら
             if(bat1.intersect(ball)){
                 if(bat1.crash== false){
-                    bat1.frame = 1;　　//コスチュームを１にする
-                    bat1.crash = true;　//当たったフラグをオンにする
+                    bat1.frame = 1;      //コスチュームを１にする
+                    bat1.crash = true;   //当たったフラグをオンにする
                     bat1.crashAnimeTimer = parseInt(game.frame / game.fps);
                 }
             }
@@ -85,19 +87,26 @@ window.onload = function(){
                     ball.x = sprite1.x; //ボールのX座標をスプライトに合わせる
                     ball.y = sprite1.y; // ボールのY座標をスプライトに合わせる
                     ball.visible = true; //ボールを表示する
-
+                    sprite1.AnimeFlag = true;
+                    sprite1.AnimeTimer = parseInt(game.frame / game.fps);
+                    sprite1.frame = 6;
                 }
+            }
+            
+            if(sprite1.AnimeFlag = true && sprite1.AnimeTimer+1 <= parseInt(game.frame / game.fps)){
+                sprite1.AnimeFlag = false;
+                sprite1.frame = 5;
             }
             
             //ボールが飛んでいれば
             if(ball.ShotFlag==true){
-                if(ball.y > 0){　//上端についてなければ
+                if(ball.y > 0){  //上端についてなければ
                     ball.y-=10; 
-                }else{　//上端についたら
-                    ball.ShotFlag = false; //たまの発射状態をオフにする 
-                    ball.visible = false;　//たまを消す
-                    ball.x = sprite1.x; 　//ボールのX座標をスプライトに合わせる
-                    ball.y = sprite1.y;　// ボールのY座標をスプライトに合わせる
+                }else{  //上端についたら
+                    ball.ShotFlag = false;  //たまの発射状態をオフにする 
+                    ball.visible = false;   //たまを消す
+                    ball.x = sprite1.x;     //ボールのX座標をスプライトに合わせる
+                    ball.y = sprite1.y;     // ボールのY座標をスプライトに合わせる
                 }
             }
         });
