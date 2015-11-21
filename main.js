@@ -18,29 +18,32 @@ window.onload = function(){
 
         game.keybind( 32, 'a' );
     	
-        sprite1 = new Sprite(32, 32);
-    	sprite1.image = game.assets["chara1.png"];
-        sprite1.x = parseInt(game.width / 2);
-        sprite1.y = 250;
-        sprite1.frame = 5;
-        sprite1.AnimeTimer = 0;
-        sprite1.AnimeFlag = false;
+        //sprite1の初期設定
+        sprite1 = new Sprite(32, 32);  //サイズを32×32とする
+    	sprite1.image = game.assets["chara1.png"]; //画像をしろくまにする
+        sprite1.frame = 5;  //画像をしろくまにする
+        sprite1.x = parseInt(game.width / 2);  //ｘ座標は画面中央にする
+        sprite1.y = game.height - 100;  //Y座標は画面下から100ドット上にする
+        sprite1.AnimeTimer = 0;  //たま発射時の初期時間
+        sprite1.AnimeFlag = false;  //たま発射時のアニメーション用フラグ
         game.rootScene.addChild(sprite1);
 
+        //ballの初期設定
         ball = new Sprite(16, 16);
     	ball.image = game.assets["icon1.png"];
+        ball.frame = 4;
         ball.x = sprite1.x;
         ball.y = sprite1.y;
-        ball.frame = 4;
         ball.visible = false;
-        ball.ShotFlag = false;
+        ball.ShotFlag = false;  //たまが発射中か？
         game.rootScene.addChild(ball);
 
+        //bat1の初期設定
         bat1 = new Sprite(48, 48);
     	bat1.image = game.assets["monster3.gif"];
+        bat1.frame = 3;
         bat1.x = 0;
         bat1.y = 10;
-        bat1.frame = 3;
         bat1.moveNumber = 5;
         bat1.crash = false;
         bat1.crashAnimeTimer = 0;
@@ -48,6 +51,16 @@ window.onload = function(){
 
         game.addEventListener(Event.ENTER_FRAME, function(e){
 
+////////////////sprite1の設定
+            //スペースキーが押されたら コスチュームを
+            if(sprite1.AnimeFlag = true && sprite1.AnimeTimer+1 <= parseInt(game.frame / game.fps)){
+                sprite1.AnimeFlag = false;
+                sprite1.frame = 5;
+            }
+////////////////
+
+////////////////bat1の設定
+            
             //敵の移動距離の設定
             if(bat1.x > game.width - bat1.width ){
                 bat1.moveNumber = -5;
@@ -55,6 +68,22 @@ window.onload = function(){
                 bat1.moveNumber = 5;
             }
             
+            //bat1とBallが当たったら
+            if(bat1.crash == true){
+                if(bat1.crashAnimeTimer + 2 < parseInt(game.frame / game.fps)){ //2秒間
+                    bat1.crash = false;
+                    bat1.frame = 3;    //コスチュームを3にする    
+                }
+            }
+
+            //bat1とBallが当たっていなければ10歩移動する
+            if(bat1.crash == false){
+                bat1.x += bat1.moveNumber;
+            }
+            
+////////////////
+            
+////////////////ballの設定
             //ボールと敵が当たったら
             if(bat1.intersect(ball)){
                 if(bat1.crash== false){
@@ -64,19 +93,6 @@ window.onload = function(){
                 }
             }
 
-            //当たったフラグがオンなら
-            if(bat1.crash == true){
-                if(bat1.crashAnimeTimer + 2 < parseInt(game.frame / game.fps)){
-                    bat1.crash = false;
-                    bat1.frame = 3;    //コスチュームを3にする    
-                }
-            }
-
-            //敵と当たっていなければ移動する
-            if(bat1.crash == false){
-                bat1.x += bat1.moveNumber;
-            }
-            
             
             var input = game.input;
 
@@ -93,20 +109,15 @@ window.onload = function(){
                 }
             }
             
-            if(sprite1.AnimeFlag = true && sprite1.AnimeTimer+1 <= parseInt(game.frame / game.fps)){
-                sprite1.AnimeFlag = false;
-                sprite1.frame = 5;
-            }
-            
-            //ボールが飛んでいれば
+            //たまが発射中なら
             if(ball.ShotFlag==true){
-                if(ball.y > 0){  //上端についてなければ
+                if(ball.y > 0){  //上端についてなければ 10歩動かす
                     ball.y-=10; 
                 }else{  //上端についたら
                     ball.ShotFlag = false;  //たまの発射状態をオフにする 
                     ball.visible = false;   //たまを消す
-                    ball.x = sprite1.x;     //ボールのX座標をスプライトに合わせる
-                    ball.y = sprite1.y;     // ボールのY座標をスプライトに合わせる
+                    ball.x = game.width + 100;     //ボールのX座標をスプライトに合わせる
+                    ball.y = game.height + 100;     // ボールのY座標をスプライトに合わせる
                 }
             }
         });
